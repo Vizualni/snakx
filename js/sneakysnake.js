@@ -32,6 +32,18 @@ window.requestAnimFrame = (function(){
   			};
  })();
 
+function game(){
+	var score;
+	var levels;
+	this.gameLoop = function(){};
+	this.newGame = function(){};
+	this.init = function(){};
+	this.didSnakeWin = function(){};
+	this.run = function(){};
+	this.pause = function(){}; //pauses game and shows help, bilnds screen?
+	this.unPause = function(){};
+}
+
 function StringEvaluator(){
 	var string = "";
 

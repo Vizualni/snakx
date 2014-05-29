@@ -32,16 +32,30 @@ window.requestAnimFrame = (function(){
   			};
  })();
 
+function println(str){
+	console.log(str);
+}
+
+function level(){
+	// class for each level
+	// should class level create new numbers and operators?
+	var down_limit, up_limit;
+}
+
 function game(){
 	var score;
 	var levels;
-	this.gameLoop = function(){};
-	this.newGame = function(){};
-	this.init = function(){};
-	this.didSnakeWin = function(){};
-	this.run = function(){};
-	this.pause = function(){}; //pauses game and shows help, bilnds screen?
+	function gameLoop(){};
+	function init(){};
+	function didSnakeWin(){}; // checks if snake won by selection all correct numbers to get to the desired number
+	function loadGraphics(){}; // loads images
+	function gameOver(){}; // gets called when player loses the game. calls all function after that happened
+	this.pause = function(){}; // pauses game and shows help, bilnds screen?
 	this.unPause = function(){};
+	this.newGame = function(){};
+	this.run = function(){
+		init();
+	};
 }
 
 function StringEvaluator(){
@@ -115,7 +129,9 @@ function snakeClass(){
 	}
 
 	this.isGameOver = function(){
-		if(this.amIonEmptySpace()==false || this.amIeatingMyself()==true || numberString.isOKAY()==false ){
+		if(this.amIonEmptySpace()==false ||
+			this.amIeatingMyself()==true ||
+			numberString.isOKAY()==false ){
 			return true;
 		}
 		return false;
@@ -303,7 +319,11 @@ function getOperatorOrNumber(){
 function generateFood(){
 	//should I generate food. probability
 	if(Math.random()<FOOD_PROBABILITY && food.length<MAX_FOOD){
-		food.push( [Math.floor(Math.random()*(HOW_MUCH-1)+1), Math.floor(Math.random()*(HOW_MUCH-1)+1), getOperatorOrNumber(), Math.floor(Math.random()*FOOD_LIFE) + 15])
+		food.push( [Math.floor(Math.random()*(HOW_MUCH-1)+1),
+					Math.floor(Math.random()*(HOW_MUCH-1)+1),
+					getOperatorOrNumber(),
+					Math.floor(Math.random()*FOOD_LIFE) + 15]
+				);
 	}
 }
 
@@ -339,4 +359,6 @@ Array.prototype.remove = function(from, to) {
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
 };
+(new game()).run();
+
 run();

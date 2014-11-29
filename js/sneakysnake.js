@@ -11,6 +11,7 @@ var UP = 38, LEFT = 37, DOWN = 40, RIGHT = 39;
 var HOW_MUCH = 30;
 var ctx;
 var BLOCK_WIDTH;
+var snake;
 var SNAKE_COLOR = "#00F000";
 var FOOD_LIFE = 120;
 var FOOD_COLOR = "#F00000"
@@ -44,62 +45,16 @@ function level(){
 function game(){
 	var score;
 	var levels;
-	var snake;
-
-	function gameLoop(){
-		//drawRect(10, 10, 123);
-		ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-		drawOgrada();
-		generateFood();
-		snake.nextAction();
-		if(snake.isGameOver() == false){
-			drawFood();
-			snake.draw();
-			drawScore();
-			setTimeout(gameLoop, 80);
-		}else{
-			ctx.font="20px Arial";
-			ctx.fillText("GAME OVER!", CANVAS_WIDTH/2-40, CANVAS_HEIGHT/2);
-			console.log("GAME OVER!");
-		}
-	}
-	
-	// sets width, height and everything after DOM loads
-	function init(){
-		var c = document.getElementById("snakeMeGently");
-		ctx = c.getContext("2d");
-		CANVAS_WIDTH = c.offsetWidth;
-		CANVAS_HEIGHT = c.offsetHeight;
-		BLOCK_WIDTH = Math.floor(CANVAS_WIDTH/HOW_MUCH);
-		DIRECTION = RIGHT;
-		c.onkeydown = getKeyPress;
-	}
-
-	// checks if snake won by selection all correct numbers to get to the desired number
-	function didSnakeWin(){};
-
-	// loads images
-	function loadGraphics(){}; 
-
-	// gets called when player loses the game. calls all function after that happened
-	function gameOver(){
-
-	};
-
-	// sets score to 0, creates new snake etc
-	function newGame(){
-		snake = new snakeClass();
-	};
-
-	// pauses game and shows help, bilnds screen?
-	this.pause = function(){};
+	function gameLoop(){};
+	function init(){};
+	function didSnakeWin(){}; // checks if snake won by selection all correct numbers to get to the desired number
+	function loadGraphics(){}; // loads images
+	function gameOver(){}; // gets called when player loses the game. calls all function after that happened
+	this.pause = function(){}; // pauses game and shows help, bilnds screen?
 	this.unPause = function(){};
-
-	// run forrest run 
+	this.newGame = function(){};
 	this.run = function(){
 		init();
-		newGame();
-		gameLoop();
 	};
 }
 
@@ -249,11 +204,14 @@ function snakeClass(){
 
 }
 
-
-// Returns and sets appripriate direction, also checks if P was pressed (pause).
-// H for help, light a number with 1,2,3,..9
-// or QWER to light operator (in order +-*/)
 function getKeyPress(e){
+	/*
+	Returns and sets appripriate direction.
+	Also checks if P was pressed (pause).
+	H for help
+	or 1,2,3,...9 to light that number
+	or qwer to light that operator
+	*/
 	var evnt = window.event? window.event: e;
 	var kk = e.keyCode; 
 	if(kk==UP || kk==DOWN || kk==LEFT || kk==RIGHT){
@@ -271,6 +229,18 @@ function getKeyPress(e){
 		HELP_NUMBER_COUNTER=HELP_NUMBER_COUNTER_INIT_VALUE;
 	}
 	return 0;
+} 
+
+function init(){
+	var c = document.getElementById("snakeMeGently");
+	ctx = c.getContext("2d");
+	CANVAS_WIDTH = c.offsetWidth;
+	CANVAS_HEIGHT = c.offsetHeight;
+	BLOCK_WIDTH = Math.floor(CANVAS_WIDTH/HOW_MUCH);
+	DIRECTION = RIGHT;
+	snake = new snakeClass();
+	document.onkeydown = getKeyPress;
+
 }
 
 function drawRect(x, y){
@@ -298,6 +268,29 @@ function drawOgrada(){
 		drawRect(HOW_MUCH*BLOCK_WIDTH, i*BLOCK_WIDTH);
 	}
 	ctx.fillStyle = old_style;
+}
+
+function gameLoop(){
+	//drawRect(10, 10, 123);
+	ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+	drawOgrada();
+	generateFood();
+	snake.nextAction();
+	if(snake.isGameOver() == false){
+		drawFood();
+		snake.draw();
+		drawScore();
+		setTimeout(gameLoop, 80);
+	}else{
+		ctx.font="20px Arial";
+		ctx.fillText("GAME OVER!", CANVAS_WIDTH/2-40, CANVAS_HEIGHT/2);
+		console.log("GAME OVER!");
+	}
+}
+
+function run(){
+	init();
+	gameLoop();
 }
 
 function isThisFoodAndDeleteIt(snake_x, snake_y){
@@ -366,4 +359,6 @@ Array.prototype.remove = function(from, to) {
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
 };
-new game().run();
+(new game()).run();
+
+run();

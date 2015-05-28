@@ -45,6 +45,16 @@ function game(){
 	var score;
 	var levels;
 	var snake;
+	var c;
+	function drawScore(){
+		var old = ctx.fillStyle;
+		ctx.fillStyle = "#fad";
+		var str = snake.getSnakeString();
+		var scr = snake.getScore();
+		if(scr)str+="="+scr;
+		ctx.fillText(str, BLOCK_WIDTH, BLOCK_WIDTH);
+		ctx.fillStyle = old;
+	}
 
 	function gameLoop(){
 		//drawRect(10, 10, 123);
@@ -66,13 +76,13 @@ function game(){
 	
 	// sets width, height and everything after DOM loads
 	function init(){
-		var c = document.getElementById("snakeMeGently");
+		c = document.getElementById("snakeMeGently");
 		ctx = c.getContext("2d");
 		CANVAS_WIDTH = c.offsetWidth;
 		CANVAS_HEIGHT = c.offsetHeight;
 		BLOCK_WIDTH = Math.floor(CANVAS_WIDTH/HOW_MUCH);
 		DIRECTION = RIGHT;
-		c.onkeydown = getKeyPress;
+		console.log(getKeyPress);
 	}
 
 	// checks if snake won by selection all correct numbers to get to the desired number
@@ -101,7 +111,33 @@ function game(){
 		newGame();
 		gameLoop();
 	};
+
+
 }
+
+// Returns and sets appripriate direction, also checks if P was pressed (pause).
+	// H for help, light a number with 1,2,3,..9
+	// or QWER to light operator (in order +-*/)
+	function getKeyPress(e){
+		var evnt = window.event? window.event: e;
+		var kk = e.keyCode; 
+		if(kk==UP || kk==DOWN || kk==LEFT || kk==RIGHT){
+			//big if so you can't go backwards
+			if( !(DIRECTION==LEFT && kk==RIGHT) &&
+				!(DIRECTION==RIGHT && kk==LEFT) &&
+				!(DIRECTION==UP && kk==DOWN) &&
+				!(DIRECTION==DOWN && kk==UP)){
+				DIRECTION = kk;
+			}
+		}else if(kk==80){ //pause
+			PAUSE = !PAUSE;
+		}else if(kk>=48 && kk<=57){
+			HELP_NUMBER = kk;
+			HELP_NUMBER_COUNTER=HELP_NUMBER_COUNTER_INIT_VALUE;
+		}
+		return 0;
+	}
+	document.body.addEventListener("keydown", getKeyPress)	;
 
 function StringEvaluator(){
 	var string = "";
@@ -249,30 +285,6 @@ function snakeClass(){
 
 }
 
-
-// Returns and sets appripriate direction, also checks if P was pressed (pause).
-// H for help, light a number with 1,2,3,..9
-// or QWER to light operator (in order +-*/)
-function getKeyPress(e){
-	var evnt = window.event? window.event: e;
-	var kk = e.keyCode; 
-	if(kk==UP || kk==DOWN || kk==LEFT || kk==RIGHT){
-		//big if so you can't go backwards
-		if( !(DIRECTION==LEFT && kk==RIGHT) &&
-			!(DIRECTION==RIGHT && kk==LEFT) &&
-			!(DIRECTION==UP && kk==DOWN) &&
-			!(DIRECTION==DOWN && kk==UP)){
-			DIRECTION = kk;
-		}
-	}else if(kk==80){ //pause
-		PAUSE = !PAUSE;
-	}else if(kk>=48 && kk<=57){
-		HELP_NUMBER = kk;
-		HELP_NUMBER_COUNTER=HELP_NUMBER_COUNTER_INIT_VALUE;
-	}
-	return 0;
-}
-
 function drawRect(x, y){
 	ctx.fillRect(x, y, BLOCK_WIDTH, BLOCK_WIDTH);
 }
@@ -347,16 +359,6 @@ function drawFood(){
 			food[i][3]--;
 		}
 	}
-	ctx.fillStyle = old;
-}
-
-function drawScore(){
-	var old = ctx.fillStyle;
-	ctx.fillStyle = "#fad";
-	var str = snake.getSnakeString();
-	var scr = snake.getScore();
-	if(scr)str+="="+scr;
-	ctx.fillText(str, BLOCK_WIDTH, BLOCK_WIDTH);
 	ctx.fillStyle = old;
 }
 
